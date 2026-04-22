@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚨 YOU GOT PHISHED 🚨</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes pulse-bg {
+            0%, 100% { background-color: #1a1a1a; }
+            50% { background-color: #2a0a0a; }
+        }
+        body {
+            animation: pulse-bg 2s infinite;
+        }
+        .glitch {
+            position: relative;
+            color: white;
+            text-shadow: 0.05em 0 0 rgba(255,0,0,.75),
+                        -0.025em -0.05em 0 rgba(0,255,0,.75),
+                         0.025em 0.05em 0 rgba(0,0,255,.75);
+            animation: glitch 1s infinite alternate-reverse;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen font-sans text-white p-4">
+    
+    <div class="bg-gray-900 border border-red-600 rounded-lg p-8 md:p-12 shadow-2xl shadow-red-900 w-full max-w-lg text-center relative overflow-hidden">
+        
+        <!-- Blinking Siren Emoji -->
+        <div class="text-7xl mb-6 animate-pulse">🚨</div>
+
+        <h1 class="text-3xl md:text-4xl font-extrabold text-red-500 mb-4 glitch uppercase tracking-wider">
+            You Just Got Phished!
+        </h1>
+        
+        <p class="text-lg text-gray-300 mb-6 leading-relaxed">
+            This was a simulated social engineering trap. You gave away your credentials in exchange for "Premium Wi-Fi."
+        </p>
+
+        <div class="bg-black border border-gray-700 rounded p-6 mb-8 mt-4 text-left font-mono break-all">
+            <p class="text-sm text-gray-400 mb-2">// CAPTURED DATA:</p>
+            <p class="text-green-500 mb-1">Email: <span id="disp-email" class="text-white">...</span></p>
+            <p class="text-red-500">Password: <span id="disp-password" class="text-white">...</span></p>
+        </div>
+
+        <p class="text-sm text-gray-400 max-w-xs mx-auto">
+            If this were a real hacker, they would now have full access to your account. Stay safe on public Wi-Fi.
+        </p>
+
+        <button onclick="window.location.href='/static/index.html'" class="mt-8 bg-transparent border-2 border-red-600 hover:bg-red-600 text-white font-bold py-2 px-6 rounded transition-colors uppercase tracking-widest text-sm">
+            Restart Demo
+        </button>
+
+    </div>
+
+    <script>
+        // Retrieve harvested data from LocalStorage
+        const harvestedEmail = localStorage.getItem('phished_email') || '[No Email Captured]';
+        const harvestedPassword = localStorage.getItem('phished_password') || '[No Password Captured]';
+        
+        // Display to prove the point
+        document.getElementById('disp-email').textContent = harvestedEmail;
+        document.getElementById('disp-password').textContent = harvestedPassword;
+
+        // Clear it so it doesn't linger forever
+        localStorage.removeItem('phished_email');
+        localStorage.removeItem('phished_password');
+    </script>
+</body>
+</html>
