@@ -3,11 +3,12 @@ import asyncio
 import json
 import logging
 from typing import Set
+from fastapi import WebSocket
 
 logger = logging.getLogger(__name__)
 
 # Maintain active websocket connections to broadcast to the UI
-connected_clients: Set[asyncio.WebSocket] = set()
+connected_clients: Set[WebSocket] = set()
 
 INTERFACE = "eth0"  # Will be wlan0 later
 
