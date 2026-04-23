@@ -3,7 +3,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-INTERFACE = "eth0" # Change to wlan0 later
+INTERFACE = "vbr0" # Virtual bridge for VM testing (wlan0 for Raspberry Pi)
 
 def grant_internet_access(ip_address: str):
     """
