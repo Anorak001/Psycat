@@ -3,7 +3,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-INTERFACE = "vbr0" # Virtual bridge for VM testing (wlan0 for Raspberry Pi)
+INTERFACE = "wlan0" # Virtual bridge for VM testing (wlan0 for Raspberry Pi)
 
 def grant_internet_access(ip_address: str):
     """

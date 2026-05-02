@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 # Maintain active websocket connections to broadcast to the UI
 connected_clients: Set[WebSocket] = set()
 
-INTERFACE = "vbr0"  # Virtual bridge for VM testing (wlan0 for Raspberry Pi)
+INTERFACE = "wlan0"  # Virtual bridge for VM testing (wlan0 for Raspberry Pi)
 
 def start_sniffer():
     """
