@@ -234,3 +234,10 @@ sudo systemctl stop dnsmasq
 
 # Now, run it in debug mode
 sudo dnsmasq --no-daemon --log-queries
+
+
+## Dont fucking miss this:
+
+sudo iptables -t nat -A PREROUTING -i wlan0 -p tcp --dport 80 -j DNAT --to-destination 192.168.4.1:8000
+
+as of now, it is working since it is saved.. if it breaks on reboot , this is the first cause.
