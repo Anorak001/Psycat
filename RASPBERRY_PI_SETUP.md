@@ -10,17 +10,26 @@ This guide will walk you through setting up the Psycat captive portal on your Ra
 
 ---
 
-## Step 1: Install Dependencies
+## Step 1: Install Dependencies & Create Virtual Environment
 
-First, we need to install the necessary packages for Psycat to function as a wireless access point and handle network traffic.
+First, we need to install the necessary system packages and then create an isolated Python environment for our project.
 
 ```bash
+# Update package list and install system dependencies
 sudo apt-get update
-sudo apt-get install -y python3-pip dnsmasq hostapd
+sudo apt-get install -y python3-pip python3-venv dnsmasq hostapd
+
+# Create a virtual environment
+python3 -m venv venv
+
+# Activate the virtual environment
+source venv/bin/activate
+
+# Now, install Python packages inside the environment
 pip3 install -r requirements.txt
 ```
 
-`hostapd` will allow your Raspberry Pi to act as an access point, and `dnsmasq` will handle DHCP and DNS services for devices that connect to it.
+From now on, before you run the application, you must **activate the virtual environment** in your terminal session by running `source venv/bin/activate`. You'll know it's active when you see `(venv)` at the beginning of your command prompt.
 
 ---
 
@@ -152,16 +161,76 @@ iptables-restore < /etc/iptables.ipv4.nat
 
 Now you are ready to run the application.
 
-First, reboot your Raspberry Pi for all the changes to take effect.
+First, reboot your Raspberry Pi for all the network changes to take effect.
 ```bash
 sudo reboot
 ```
 
-After rebooting, navigate to your project directory and run the main script:
+After rebooting, navigate to your project directory, activate the virtual environment, and run the main script:
 
 ```bash
 cd /path/to/your/project
-sudo python3 main.py
+
+# Activate the virtual environment
+source venv/bin/activate
+
+# Run the application with the virtual environment's Python
+sudo /home/pi/Psycat/venv/bin/python3 main.py
 ```
 
 Your Raspberry Pi should now be broadcasting a "FreeWifi" network. When a device connects, it will be directed to the Psycat captive portal.
+
+---
+
+## Troubleshooting WiFi Not Visible
+
+If the "FreeWifi" network is not appearing on any device, it almost always means `hostapd` failed to start. Follow these steps on your Raspberry Pi to diagnose the issue.
+
+### Step 1: Check the `hostapd` Service Status
+
+First, see what the `systemd` service reports.
+
+```bash
+# Check the status of the hostapd service
+sudo systemctl status hostapd
+```
+
+Look for lines that say `Active: active (running)` or `Active: failed`. If it failed, the log entries shown will often give a clue (e.g., "Could not set channel", "Invalid country_code").
+
+### Step 2: Check for Wireless Blocks
+
+Sometimes the WiFi radio can be disabled by software.
+
+```bash
+# Check for any soft or hard blocks
+rfkill list all
+```
+
+If you see `Soft blocked: yes` for your wireless LAN, you can unblock it with:
+```bash
+sudo rfkill unblock wlan
+```
+
+### Step 3: Run `hostapd` Manually in Debug Mode
+
+This is the most effective way to find the error. It runs `hostapd` directly with your configuration file and prints detailed debug output.
+
+First, make sure the service is stopped:
+```bash
+sudo systemctl stop hostapd
+```
+
+Now, run it manually:
+```bash
+# Run hostapd in debug mode with your config file
+sudo hostapd -dd /etc/hostapd/hostapd.conf
+```
+
+## Debugging DNSMASQ
+sudo systemctl status dnsmasq
+sudo dnsmasq --test
+# First, ensure the service is stopped
+sudo systemctl stop dnsmasq
+
+# Now, run it in debug mode
+sudo dnsmasq --no-daemon --log-queries

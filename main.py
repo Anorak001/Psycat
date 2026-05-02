@@ -112,7 +112,23 @@ async def websocket_endpoint(websocket: WebSocket):
         connected_clients.remove(websocket)
         logger.info("WebSocket client disconnected.")
 
+ 
+
+@app.api_route("/{path_name:path}", methods=["GET", "POST", "HEAD"])
+async def catch_all(request: Request, path_name: str):
+    """
+    The ultimate Captive Portal Catch-All.
+    Every phone asks for a different random URL to check for internet.
+    This intercepts ALL of them and forces them to the splash page.
+    """
+    # If the phone is legitimately trying to load CSS/JS, let it.
+    if path_name.startswith("static/"):
+        return
+
+    # If it's asking for ANYTHING else (like captive.apple.com/hotspot-detect.html)
+    # Redirect it to our splash page so the portal pops up.
+    logger.info(f"Intercepted captive portal check for: {request.url}")
+    return RedirectResponse(url="/static/index.html")
 
 if __name__ == "__main__":
-    # Start the application on all interfaces so the VM can serve requests to the host or other devices
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
