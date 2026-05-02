@@ -241,3 +241,18 @@ sudo dnsmasq --no-daemon --log-queries
 sudo iptables -t nat -A PREROUTING -i wlan0 -p tcp --dport 80 -j DNAT --to-destination 192.168.4.1:8000
 
 as of now, it is working since it is saved.. if it breaks on reboot , this is the first cause.
+
+
+## when the freewifi is connected automatically without authorization popup:
+
+nuke iptables:
+
+# 1. Nuke all existing rules
+sudo iptables -F
+sudo iptables -t nat -F
+
+# 2. Add the Captive Portal Bouncer (Redirect Port 80 to 8000)
+sudo iptables -t nat -A PREROUTING -i wlan0 -p tcp --dport 80 -j DNAT --to-destination 192.168.4.1:8000
+
+# 3. Add the Guest Internet rule (Share eth0 to wlan0)
+sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
