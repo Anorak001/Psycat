@@ -25,46 +25,12 @@
         <hr class="my-6 border-gray-200">
 
         <!-- Action B: Guest -->
-        <button id="guestBtn" class="w-full text-gray-500 hover:text-gray-800 font-medium py-2 px-4 rounded transition duration-200 text-sm flex justify-center items-center gap-2">
+        <a href="/static/login_success.html" class="w-full text-gray-500 hover:text-gray-800 font-medium py-2 px-4 rounded transition duration-200 text-sm flex justify-center items-center gap-2">
             Continue as Guest (1 Mbps limit)
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
             </svg>
-        </button>
-        <p id="loadingMsg" class="hidden text-xs text-blue-500 mt-2">Connecting...</p>
+        </a>
     </div>
-
-    <script>
-        document.getElementById('guestBtn').addEventListener('click', async (e) => {
-            e.preventDefault();
-            const btn = document.getElementById('guestBtn');
-            const msg = document.getElementById('loadingMsg');
-            
-            btn.disabled = true;
-            btn.classList.add('opacity-50');
-            msg.classList.remove('hidden');
-
-            try {
-                // Post to the backend route to trigger routing/throttling
-                const response = await fetch('/api/auth/guest', {
-                    method: 'POST'
-                });
-                
-                if (response.ok) {
-                    // Redirect to the Wall of Sheep dashboard
-                    window.location.href = '/static/dashboard.html';
-                } else {
-                    alert("Failed to connect. Please try again.");
-                    btn.disabled = false;
-                    btn.classList.remove('opacity-50');
-                    msg.classList.add('hidden');
-                }
-            } catch (error) {
-                console.error("Error connecting:", error);
-                // For demo purposes, if API is down, redirect anyway
-                window.location.href = '/static/dashboard.html';
-            }
-        });
-    </script>
 </body>
 </html>
